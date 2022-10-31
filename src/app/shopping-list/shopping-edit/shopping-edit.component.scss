@@ -1,0 +1,33 @@
+.container {
+    display: flex;
+    justify-content: center;
+
+    .edit-form {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+
+        .input-form {
+            display: flex;
+
+            .form-group {
+                margin: 0 10px;
+
+                #amount {
+                    width: 80px;
+                }
+            }
+        }
+    }
+
+    .edit-btns {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin: 10px 0;
+    }
+    
+    button {
+        margin: 0 5px;
+    }
+}
