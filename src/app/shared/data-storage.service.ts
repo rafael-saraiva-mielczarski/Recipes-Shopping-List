@@ -23,29 +23,23 @@ export class DataStorageService {
         //the <> describes the type of response will get, so in the setRecipes, the response can be understood by TS
         //if the recipe submitted has no ingredients, it will by default be set to an empty array, via the map operator
         //take() only takes 1 value from the observanble, in this case only gets the current user when data is fetched
-        return this.authService.user.pipe(
-            take(1), 
-            exhaustMap(user => {
-            return this.http.get<Recipe[]>(
-                'https://shop-recipe-efdfa-default-rtdb.firebaseio.com/recipes.json',
-                {
-                    params: new HttpParams().set('auth', user.token)
-                }
+        return this.http.get<Recipe[]>(
+            'https://shop-recipe-efdfa-default-rtdb.firebaseio.com/recipes.json',)
+            .pipe(
+                map(
+                    recipes => {
+                        return recipes.map(recipe => {
+                            return {
+                                ...recipe, 
+                                ingredients: recipe.ingredients ? recipe.ingredients : []
+                            }
+                        });
+                    })    
+                , tap(
+                    recipes => {
+                        this.recipesService.setRecipes(recipes);
+                    })
                 );
-            })
-            , map(
-            recipes => {
-                return recipes.map(recipe => {
-                    return {
-                        ...recipe, 
-                        ingredients: recipe.ingredients ? recipe.ingredients : []
-                    }
-                });
-            })
-            , tap(
-                recipes => {
-                    this.recipesService.setRecipes(recipes);
-                }
-            ));
+        
     }
 }
