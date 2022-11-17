@@ -9,7 +9,7 @@ const initialState = {
     ]
 }
 
-export function shoppingListReducer(state = initialState, action: ShoppingListActions.AddIngredient) {
+export function shoppingListReducer(state = initialState, action: ShoppingListActions.ShoppingListActions) {
     switch (action.type) {
         //best practice to always use caps
         case ShoppingListActions.ADD_INGREDIENT:
@@ -19,6 +19,33 @@ export function shoppingListReducer(state = initialState, action: ShoppingListAc
                 ingredients: [...state.ingredients, action.payload]
             };
         //default sends the initial state
+        case ShoppingListActions.ADD_INGREDIENTS:
+            return {
+                ...state,
+                ingredients: [...state.ingredients, ...action.payload]
+                //use the ... so that it doesn't create a nested array
+            };
+        case ShoppingListActions.UPDATE_INGREDIENT:
+            const ingredient = state.ingredients[action.payload.index];
+            const updatedIngredient = {
+                //copy the ingredient 
+                ...ingredient,
+                //overwrite only the especific part you want
+                ...action.payload.ingredient
+            }
+            const updatedIngredients = [...state.ingredients];
+            updatedIngredients[action.payload.index] = updatedIngredient;
+            return {
+                ...state,
+                ingredients: updatedIngredients
+            };
+        case ShoppingListActions.DELETE_INGREDIENT:
+            return {
+                ...state,
+                ingredients: state.ingredients.filter((ingredient, ingredientIndex) => {
+                    return ingredientIndex !== action.payload;
+                })
+            };
         default:
             return state;
     }
