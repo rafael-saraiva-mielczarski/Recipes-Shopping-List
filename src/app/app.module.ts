@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { StoreModule } from '@ngrx/store';
 
 
 import { AppComponent } from './app.component';
@@ -17,6 +18,7 @@ import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinne
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { AlertComponent } from './shared/alert/alert.component';
 import { RecipesModule } from './recipes/recipes.module';
+import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import { RecipesModule } from './recipes/recipes.module';
     ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,
-    RecipesModule
+    RecipesModule,
+    StoreModule.forRoot({shoppingList: shoppingListReducer})
   ],
   providers: [
     ShoppingListService, 
