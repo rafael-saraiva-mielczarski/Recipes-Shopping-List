@@ -1,5 +1,7 @@
 # ShopRecipeApp
 
+Link to acess it on your computer: https://shop-recipe-efdfa.web.app/auth
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.2.
 
 ## Development server
