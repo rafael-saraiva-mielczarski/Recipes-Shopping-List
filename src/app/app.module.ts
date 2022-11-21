@@ -16,7 +16,8 @@ import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinne
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { AlertComponent } from './shared/alert/alert.component';
 import { RecipesModule } from './recipes/recipes.module';
-import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer';
+import * as fromApp from './store/app.reducer'
+import { from } from 'rxjs';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,7 @@ import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer
     HttpClientModule,
     AppRoutingModule,
     RecipesModule,
-    StoreModule.forRoot({shoppingList: shoppingListReducer})
+    StoreModule.forRoot(fromApp.appReducer)
   ],
   providers: [
     RecipeService, 
