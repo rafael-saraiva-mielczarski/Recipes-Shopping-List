@@ -1,15 +1,17 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { RecipeService } from "../recipes/recipe.service";
 import { Recipe } from "../recipes/recipe.model";
-import { map, take, tap, exhaustMap } from "rxjs";
-import { AuthService } from "../auth/auth.service";
+import { map, tap} from "rxjs";
+import { Store } from "@ngrx/store";
+import * as fromApp from '../store/app.reducer';
+import * as RecipesActions from '../recipes/store/recipe.actions';
 
 @Injectable({providedIn: 'root'})
 export class DataStorageService {
     constructor(private http: HttpClient,
                 private recipesService: RecipeService,
-                private authService: AuthService) {}
+                private store: Store<fromApp.AppState>) {}
 
     storeRecipe() {
         const recipes = this.recipesService.getRecipes()
@@ -26,20 +28,18 @@ export class DataStorageService {
         return this.http.get<Recipe[]>(
             'https://shop-recipe-efdfa-default-rtdb.firebaseio.com/recipes.json',)
             .pipe(
-                map(
-                    recipes => {
-                        return recipes.map(recipe => {
-                            return {
-                                ...recipe, 
-                                ingredients: recipe.ingredients ? recipe.ingredients : []
-                            }
-                        });
-                    })    
-                , tap(
-                    recipes => {
-                        this.recipesService.setRecipes(recipes);
-                    })
-                );
-        
+                map(recipes => {
+                  return recipes.map(recipe => {
+                    return {
+                      ...recipe,
+                      ingredients: recipe.ingredients ? recipe.ingredients : []
+                    };
+                  });
+                }),
+                tap(recipes => {
+                  // this.recipeService.setRecipes(recipes);
+                  this.store.dispatch(new RecipesActions.SetRecipes(recipes));
+                })
+              );
     }
 }
