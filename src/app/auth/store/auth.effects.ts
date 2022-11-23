@@ -14,7 +14,7 @@ export interface AuthResponseData {
     email: string,
     refreshToken: string,
     expiresIn: string,
-    localId: string
+    localId: string,
 }
 
 const handleAuthentication = (
@@ -30,7 +30,8 @@ const handleAuthentication = (
         email: email, 
         userId: userId, 
         token: token, 
-        expirationData: expirationDate
+        expirationData: expirationDate,
+        redirect: true
     });
 }
 
@@ -105,7 +106,7 @@ export class AuthEffects {
                         responseData.email, 
                         responseData.localId, 
                         responseData.idToken, 
-                        +responseData.expiresIn);
+                        +responseData.expiresIn,);
                 }),
                 catchError(errorResponse => {
                    return handleError(errorResponse)
@@ -115,8 +116,9 @@ export class AuthEffects {
     );
 
     @Effect({dispatch: false})
-    authRedirect = this.actions$.pipe(ofType(AuthActions.AUTHENTICATE_SUCCESS), tap(() => {
-        this.router.navigate(['/']);
+    authRedirect = this.actions$.pipe(ofType(AuthActions.AUTHENTICATE_SUCCESS), tap((authSuccessAction: AuthActions.AuthenticateSuccess) => {
+        if(authSuccessAction.payload.redirect)
+            this.router.navigate(['/']);
         })
     );
 
@@ -141,7 +143,8 @@ export class AuthEffects {
                     email: loadedUser.email, 
                     userId: loadedUser.id, 
                     token: loadedUser.token,
-                    expirationData: new Date(userData._tokenExpirationDate)
+                    expirationData: new Date(userData._tokenExpirationDate),
+                    redirect: false
                     })
             }
             return { type: 'Test'}
